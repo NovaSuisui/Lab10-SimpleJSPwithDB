@@ -49,17 +49,22 @@ public class StudentServlet extends HttpServlet {
 //        }
         synchronized(getServletContext()){
             if(request.getParameter("Input") != null){
-                int id = Integer.parseInt( request.getParameter("InputID") );
-                String name = request.getParameter("InputName");
-                double gpa = Double.parseDouble( request.getParameter("InputGPA") );
-                Student stu = new Student(id, name, gpa);
-                boolean insert = StudentTable.insertStudent(stu);
-                request.setAttribute("StudentList", StudentTable.findAllStudent());
-                if(insert){
-                    request.getRequestDispatcher("/Success.jsp").forward(request, response);
+                try{
+                    int id = Integer.parseInt( request.getParameter("InputID") );
+                    String name = request.getParameter("InputName");
+                    double gpa = Double.parseDouble( request.getParameter("InputGPA") );
+                    Student stu = new Student(id, name, gpa);
+                    boolean insert = StudentTable.insertStudent(stu);
+                    request.setAttribute("StudentList", StudentTable.findAllStudent());
+                    if(insert){
+                        request.getRequestDispatcher("/Success.jsp").forward(request, response);
+                    }
+                    else{
+                        request.getRequestDispatcher("/Error.jsp").forward(request, response);
+                    }
                 }
-                else{
-                    request.getRequestDispatcher("/Error.jsp").forward(request, response);
+                catch(Exception e){
+                    request.getRequestDispatcher("/index.html").forward(request, response);
                 }
             }
             else if(request.getParameter("Remove") != null){
